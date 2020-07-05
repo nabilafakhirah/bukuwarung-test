@@ -28,7 +28,6 @@ public class HomeFragment extends Fragment implements UserAdapter.OnUsersListene
     private InterfaceApi interfaceApi;
     private UserAdapter userAdapter;
     private Context context;
-    public List<Users> usersList;
 
     @Nullable
     @Override
