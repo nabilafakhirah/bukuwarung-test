@@ -41,14 +41,14 @@ public class HomeFragment extends Fragment implements UserAdapter.OnUsersListene
         rvUsers = getView().findViewById(R.id.rvUsers);
         layoutManager = new LinearLayoutManager(this.getActivity());
         interfaceApi = ApiClient.getRetrofitInstance().create(InterfaceApi.class);
-        performSearch();
+        performQuery();
     }
 
     public UserAdapter.OnUsersListener getUserListener() {
         return this;
     }
 
-    private void performSearch() {
+    private void performQuery() {
         rvUsers.setLayoutManager(layoutManager);
         Call<ApiResponse> call = interfaceApi.getUsers();
 
