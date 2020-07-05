@@ -5,6 +5,6 @@ import retrofit2.http.GET;
 
 public interface InterfaceApi {
 
-    @GET("/users")
+    @GET(".")
     Call <ApiResponse> getUsers();
 }
