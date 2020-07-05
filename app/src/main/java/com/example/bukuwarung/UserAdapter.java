@@ -17,9 +17,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private Context context;
     private List<Users> usersList;
 
-    public UserAdapter(Context ct, List<Users> usersList) {
+    private OnUsersListener mOnUsersListener;
+
+    public UserAdapter(Context ct, List<Users> usersList, OnUsersListener onUsersListener) {
         context = ct;
         this.usersList = usersList;
+        this.mOnUsersListener = onUsersListener;
     }
 
     @NonNull
@@ -27,7 +30,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_users, viewGroup, false);
-        return new UserViewHolder(view);
+        return new UserViewHolder(view, mOnUsersListener);
     }
 
     @Override
@@ -41,24 +44,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return usersList.size();
     }
 
-    public class UserViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvName;
         ImageView ivUser;
+        OnUsersListener mOnUserListener;
 
-        public UserViewHolder(@NonNull View itemView) {
+        public UserViewHolder(@NonNull View itemView, OnUsersListener onUsersListener) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             ivUser = itemView.findViewById(R.id.ivUser);
+            mOnUserListener = onUsersListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnUserListener.onUsersClick(getAdapterPosition());
         }
     }
 
-    public void addUsers(List<Users> users) {
-
-        for(Users user : users) {
-            usersList.add(user);
-        }
-
-        notifyDataSetChanged();
+    public interface OnUsersListener{
+        void onUsersClick(int position);
     }
 }

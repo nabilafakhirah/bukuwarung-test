@@ -1,6 +1,7 @@
 package com.example.bukuwarung;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,12 +22,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements UserAdapter.OnUsersListener {
     private RecyclerView rvUsers;
     private LinearLayoutManager layoutManager;
     private InterfaceApi interfaceApi;
     private UserAdapter userAdapter;
     private Context context;
+    public List<Users> usersList;
 
     @Nullable
     @Override
@@ -43,9 +45,12 @@ public class HomeFragment extends Fragment {
         performSearch();
     }
 
+    public UserAdapter.OnUsersListener getUserListener() {
+        return this;
+    }
+
     private void performSearch() {
         rvUsers.setLayoutManager(layoutManager);
-
         Call<ApiResponse> call = interfaceApi.getUsers();
 
         call.enqueue(new Callback<ApiResponse>() {
@@ -54,7 +59,7 @@ public class HomeFragment extends Fragment {
                 if (response.body() != null) {
                     List<Users> users = response.body().getUsersList();
                     if (!users.isEmpty()) {
-                        userAdapter = new UserAdapter(context, users);
+                        userAdapter = new UserAdapter(context, users, getUserListener());
                         rvUsers.setAdapter(userAdapter);
                     } else {
                         Toast toast = Toast.makeText(context,
@@ -69,11 +74,17 @@ public class HomeFragment extends Fragment {
                     toast.show();
                 }
             }
-
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 System.out.println(t);
             }
         });
+    }
+
+    @Override
+    public void onUsersClick(int position) {
+        Intent intent = new Intent(getActivity().getBaseContext(), UserActivity.class);
+        intent.putExtra("id", Integer.toString(position));
+        startActivity(intent);
     }
 }
