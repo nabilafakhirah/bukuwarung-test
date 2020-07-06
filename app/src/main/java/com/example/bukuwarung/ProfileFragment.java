@@ -57,7 +57,19 @@ public class ProfileFragment extends Fragment {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                status = !status;
+                if(status) {
+                    String name = etName.getText().toString();
+                    String email = etEmail.getText().toString();
+                    String gender = etGender.getText().toString();
+
+                    Profile profile = new Profile(name, email, gender);
+                    profile.setId(1);
+
+                    profileViewModel.update(profile);
+                    status = false;
+                } else {
+                    status = true;
+                }
                 setEnability();
             }
         });
