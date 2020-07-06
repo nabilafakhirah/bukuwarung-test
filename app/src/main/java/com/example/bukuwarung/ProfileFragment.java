@@ -1,5 +1,8 @@
 package com.example.bukuwarung;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.util.List;
 
 /**
  * Created by Belal on 1/23/2018.
@@ -20,6 +25,8 @@ public class ProfileFragment extends Fragment {
     private EditText etEmail;
     private EditText etGender;
     private FloatingActionButton editButton;
+
+    private ProfileViewModel profileViewModel;
 
     @Nullable
     @Override
@@ -34,6 +41,16 @@ public class ProfileFragment extends Fragment {
         etEmail = getView().findViewById(R.id.et_email);
         etGender = getView().findViewById(R.id.et_gender);
         editButton = getView().findViewById(R.id.bEdit);
+
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        profileViewModel.getProfiles().observe(this, new Observer<List<Profile>>() {
+            @Override
+            public void onChanged(@Nullable List<Profile> profiles) {
+                etName.setText(profiles.get(0).getName());
+                etEmail.setText(profiles.get(0).getEmail());
+                etGender.setText(profiles.get(0).getGender());
+            }
+        });
 
         setEnability();
 
